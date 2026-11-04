@@ -1,8 +1,10 @@
 # reviewHamza
 
-A Claude Code skill that adds a **Review Desk** to a Remotion video project: a local page with the live player, a clickable timeline of every element, a prompt box that inserts exact references, comment mode, and "Send to Claude".
+مهارة لـ Claude Code تضيف **صفحة مراجعة (Review Desk)** إلى مشروع فيديو Remotion. تفتح الصفحة الفيديو مع خط زمني تضغط عليه لاختيار أي عنصر، ثم ترسل ملاحظاتك إلى Claude ليطبقها.
 
-## Install (one command)
+## 1. التثبيت (مرة واحدة فقط)
+
+اكتب هذا الأمر في الطرفية:
 
 macOS / Linux / Git Bash:
 
@@ -16,18 +18,49 @@ Windows PowerShell:
 git clone https://github.com/hamza-tricking/reviewHamza $env:USERPROFILE\.claude\skills\reviewHamza
 ```
 
-Update later with `git pull` inside that folder.
+أو اكتب لـ Claude: **ثبّت مهارة reviewHamza من https://github.com/hamza-tricking/reviewHamza**
 
-## Use
+## 2. تشغيل صفحة المراجعة
 
-Open your Remotion project in Claude Code and say `reviewHamza`. After you review in the desk, say `apply review`.
+افتح Claude Code داخل مشروع Remotion، ثم اكتب:
 
-## Requirements
+```
+/reviewHamza
+```
 
-- Node.js and a Remotion project with `src/Main.tsx` (exports `Main` and `DEFAULT_MIX`) and `src/Segments.tsx` (see `template/README.md` for the exact contract).
-- `esbuild` and `@remotion/player` in the project's `node_modules`.
+سيركّب Claude صفحة المراجعة في المشروع ويشغّلها ويعطيك الرابط لفتحها.
 
-## Layout
+## 3. المراجعة داخل الصفحة
 
-- `SKILL.md` — the skill instructions
-- `template/` — the Review Desk template the skill copies into your project (`review/`, `fonts/`, `README.md`)
+- **اضغط أي عنصر** في الخط الزمني، فيُضاف مرجعه الدقيق إلى مربع النص.
+- **اضغط Ctrl أو Shift** لاختيار عدة عناصر معاً.
+- **اضغط المسطرة الزمنية** لاختيار لحظة، أو **اسحب عليها** لاختيار مدى زمني.
+- **وضع 💬 Comment:** اضغط عنصراً واكتب ملاحظة تظهر فوق الخط الزمني.
+- **Send to Claude:** يحفظ ملاحظاتك ويرسلها إلى Claude.
+
+## 4. تطبيق الملاحظات
+
+ارجع إلى Claude واكتب:
+
+```
+apply review
+```
+
+سيطبّق Claude الملاحظات على الكود. بعدها اضغط «↻ Reload timeline» في الصفحة لترى التغيير. لن يصدّر Claude الفيديو إلا إذا طلبت ذلك.
+
+## المتطلبات
+
+- Node.js.
+- مشروع Remotion يحتوي على `src/Main.tsx` و`src/Segments.tsx`.
+- الحزم `esbuild` و`@remotion/player` داخل `node_modules` (إن لم تكن موجودة سيثبتها Claude).
+
+## تحديث المهارة
+
+```bash
+cd ~/.claude/skills/reviewHamza && git pull
+```
+
+## ما في المستودع
+
+- `SKILL.md`: تعليمات المهارة لـ Claude.
+- `template/`: قالب صفحة المراجعة الذي يُنسخ إلى مشروعك (`review/` و`fonts/` و`README.md`).
