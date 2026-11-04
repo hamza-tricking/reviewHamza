@@ -1,0 +1,12 @@
+{
+  "project": "PROJECT-NAME",
+  "clipSources": {
+    "c01": "original speaker file name for public/clips/c01.mp4"
+  },
+  "supportSources": {
+    "screen.mp4": "original screen-recording name for public/support/screen.mp4"
+  },
+  "extraDetails": {
+    "music": "Background music public/music/bg.mp3 = <track name>"
+  }
+}

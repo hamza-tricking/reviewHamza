@@ -1,0 +1,20 @@
+{
+  "project": "skill-platform (SkillDesk video)",
+  "slug": "skill",
+  "parser": "skilldesk",
+  "target": {
+    "module": "src/skill/SkillDesk",
+    "component": "SkillDesk",
+    "mix": "SKILL_MIX",
+    "id": "SkillDesk"
+  },
+  "clipSources": {
+    "speaker.mp4": "E:/skill platform/HJKS3351.MOV (full take, vertical, voice -16 LUFS)"
+  },
+  "supportSources": {
+    "problem.mp4": "E:/skill platform/the problem .mp4 (normal way: Remotion Studio -> Claude screenshots)",
+    "desk_short.mp4": "E:/skill platform/2026-11-04 04-31-16.mp4 (Review Desk, short)",
+    "desk_long.mp4": "E:/skill platform/2026-11-04 04-10-11.mp4 (Review Desk, first 45 s)"
+  },
+  "cutNote": "hidden by an alternating face-centred punch-in (or a section transition) — see TRANSITIONS in src/skill/transitions.tsx"
+}

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Review Desk</title>
+<style>
+@font-face { font-family: Inter; src: url(/public/fonts/Inter-500-normal.woff2) format("woff2"); font-weight: 500; }
+@font-face { font-family: Inter; src: url(/public/fonts/Inter-600-normal.woff2) format("woff2"); font-weight: 600; }
+@font-face { font-family: InterTight; src: url(/public/fonts/InterTight-800-normal.woff2) format("woff2"); font-weight: 800; }
+@font-face { font-family: DARK; src: url(/public/fonts/DARK.ttf); }
+:root {
+  --bg: #F2F4F8; --ink: #14121C; --ink2: #4A4F5E; --mute: #8A90A0; --line: rgba(20,18,28,0.08);
+  --glass: rgba(255,255,255,0.58); --glass-strong: rgba(255,255,255,0.78); --glass-border: rgba(255,255,255,0.85);
+  --lime: #BBEF1F; --lime-ink: #4D6406; --pink: #FF0055; --violet: #6D5DF6;
+  --shadow: 0 12px 40px rgba(30,40,80,0.10), 0 2px 6px rgba(30,40,80,0.05);
+  --r: 22px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: Inter, "Segoe UI", sans-serif; font-weight: 500; overflow: hidden; }
+body::before { content: ""; position: fixed; inset: -20%; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(38% 34% at 12% 18%, rgba(187,239,31,0.38), transparent 70%),
+    radial-gradient(30% 30% at 88% 12%, rgba(142,197,255,0.45), transparent 70%),
+    radial-gradient(34% 30% at 80% 92%, rgba(255,0,85,0.16), transparent 70%),
+    radial-gradient(40% 40% at 30% 95%, rgba(109,93,246,0.16), transparent 70%);
+  filter: blur(10px); }
+#root { position: relative; z-index: 1; height: 100%; }
+.glass { background: var(--glass); backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%); border: 1px solid var(--glass-border); border-radius: var(--r); box-shadow: var(--shadow); }
+button { font-family: inherit; cursor: pointer; }
+.btn { border: 1px solid var(--line); background: var(--glass-strong); color: var(--ink); border-radius: 12px; padding: 9px 14px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: transform .12s, box-shadow .12s, background .12s; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(30,40,80,0.10); background: #fff; }
+.btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn.primary:hover { background: #2a2636; }
+.btn.lime { background: var(--lime); border-color: #a6d816; color: var(--ink); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+.seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: 14px; background: rgba(20,18,28,0.06); }
+.seg button { border: 0; background: transparent; padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px; color: var(--ink2); display: inline-flex; gap: 8px; align-items: center; }
+.seg button.on { background: #fff; color: var(--ink); box-shadow: 0 2px 10px rgba(30,40,80,0.12); }
+.kbd { font-size: 11px; padding: 2px 6px; border-radius: 6px; background: rgba(20,18,28,0.06); color: var(--ink2); }
+textarea { font-family: inherit; }
+::-webkit-scrollbar { height: 10px; width: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(20,18,28,0.14); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+.tl-el { position: absolute; height: 26px; border-radius: 8px; font-size: 11.5px; font-weight: 600; padding: 0 8px; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; border: 1px solid transparent; transition: box-shadow .1s, transform .1s; user-select: none; }
+.tl-el:hover { box-shadow: 0 4px 14px rgba(30,40,80,0.18); transform: translateY(-1px); z-index: 3; }
+.tl-el.sel { outline: 2.5px solid var(--ink); outline-offset: 1px; z-index: 4; }
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 50; padding: 14px 18px; font-size: 13px; max-width: 760px; }
+.token-hint { color: var(--mute); font-size: 12px; }
+
+/* ---------------- layout (responsive) ---------------- */
+.app { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr) minmax(230px, 38%); gap: 14px; padding: 14px; }
+.hdr { display: flex; align-items: center; gap: 12px 16px; padding: 10px 16px; min-height: 64px; flex-wrap: wrap; }
+.hdr-seg { margin-left: 18px; }
+.hint { font-size: 12.5px; color: var(--ink2); min-width: 0; flex: 1 1 260px; }
+.hdr-right { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mid { display: grid; grid-template-columns: auto minmax(0, 1fr) 360px; gap: 14px; min-height: 0; }
+.pane-player { padding: 12px; display: flex; flex-direction: column; align-items: center; min-height: 0; }
+.player-box { height: 100%; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; background: #0D0303; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.pane-composer { padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 0; min-width: 0; }
+.composer-ta { flex: 1; min-height: 0; width: 100%; }
+.comp-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.comp-actions .primary { margin-left: auto; }
+.pane-side { display: flex; flex-direction: column; gap: 14px; min-height: 0; min-width: 0; }
+.pane-inspector { padding: 16px; min-height: 150px; overflow: auto; }
+.pane-comments { padding: 16px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.comments-list { overflow: auto; display: flex; flex-direction: column; gap: 8px; }
+.pane-tl { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.tl-bar { display: flex; align-items: center; gap: 8px 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tl-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.tl-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink2); }
+.tl-tools input[type=range] { width: 120px; }
+.pane-tl > div:last-child { flex: 1; min-height: 0; }
+
+/* small laptop / tablet landscape: the side column drops under the player + composer */
+@media (max-width: 1260px) {
+  .app { grid-template-rows: auto minmax(0, 1fr) minmax(210px, 34%); }
+  .mid { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .pane-side { grid-column: 1 / -1; flex-direction: row; }
+  .pane-side > .glass { flex: 1 1 0; min-width: 0; max-height: 170px; min-height: 0; }
+  .hint { display: none; }
+}
+
+/* tablet portrait / phone / short windows: one column, the page scrolls */
+@media (max-width: 860px), (max-height: 640px) {
+  html, body { overflow: auto; height: auto; min-height: 100%; }
+  #root { height: auto; min-height: 100%; }
+  body::before { position: fixed; }
+  .app { height: auto; min-height: 100vh; display: flex; flex-direction: column; padding: 10px; gap: 10px; }
+  .hdr { padding: 10px 12px; gap: 8px 12px; }
+  .hdr-seg { margin-left: 0; }
+  .hdr-right { margin-left: 0; width: 100%; justify-content: space-between; }
+  .mid { display: flex; flex-direction: column; gap: 10px; }
+  .pane-player { padding: 10px; }
+  .player-box { height: auto; width: min(100%, 340px); }
+  .pane-composer { min-height: 330px; padding: 12px; }
+  .composer-ta { flex: none; height: 200px; min-height: 160px; resize: vertical; }
+  .pane-side { flex-direction: column; gap: 10px; }
+  .pane-side > .glass { flex: none; max-height: none; min-height: 0; }
+  .pane-side > .pane-inspector { min-height: 110px; padding: 12px; }
+  .pane-side > .pane-comments { padding: 12px; min-height: 120px; max-height: 260px; }
+  .pane-tl { flex: none; height: 520px; }
+  .hide-sm { display: none; }
+  .tl-tools { margin-left: 0; width: 100%; }
+  .tl-tools input[type=range] { flex: 1; width: auto; }
+  .toast { left: 10px; right: 10px; bottom: 10px; transform: none; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .hdr .seg button { padding: 7px 10px; font-size: 12.5px; }
+  .btn { padding: 8px 11px; font-size: 12.5px; }
+  .comp-actions { gap: 8px; }
+  .comp-actions .primary { width: 100%; justify-content: center; margin-left: 0; }
+  .pane-tl { height: 500px; }
+  .tl-el { height: 30px; }
+}
+@media (pointer: coarse) {
+  .btn, .seg button { min-height: 40px; }
+  .tl-el { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
